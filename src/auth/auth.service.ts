@@ -39,20 +39,20 @@ export class AuthService {
     return this.userRepo.find();
   }
 
-  async findOne(id: number): Promise<User> {
+  async findOne(id: string): Promise<User> {
     const user = await this.userRepo.findOneBy({ id });
     if (!user) throw new NotFoundException('No se encontro el usuario');
     return user;
   }
 
-  async update(id: number, updateAuthDto: UpdateAuthDto): Promise<User> {
+  async update(id: string, updateAuthDto: UpdateAuthDto): Promise<User> {
     const user = await this.userRepo.findOneBy({ id });
     if (!user) throw new NotFoundException('Usuario no encontrador');
     Object.assign(user, updateAuthDto);
     return this.userRepo.save(user);
   }
 
-  async remove(id: number): Promise<void> {
+  async remove(id: string): Promise<void> {
     const user = await this.userRepo.findOneBy({ id });
     if (!user) throw new NotFoundException('Usuario no encontrador');
     await this.userRepo.remove(user);
@@ -77,7 +77,7 @@ export class AuthService {
         name: user.name,
         email: user.email,
       },
-      access_token: token,
+      token: token,
     };
   }
 }

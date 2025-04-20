@@ -5,10 +5,10 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './auth/entities/auth.entity';
 import { AuthModule } from './auth/auth.module';
 import { ProjectModule } from './project/project.module';
-import { ProjectColaboratorModule } from './project-colaborator/project-colaborator.module';
-import { ProjectInviteModule } from './project-invite/project-invite.module';
-import { RoomModule } from './room/room.module';
-import { ProjectCollaboratorModule } from './project-collaborator/project-collaborator.module';
+import { ProjectUserModule } from './project-user/project-user.module';
+import { Project } from './project/entities/project.entity';
+import { GrapesJsGateway } from './lib/gateway/grapesjs.gateway';
+import { ProjectUser } from './project-user/entities/project-user.entity';
 
 @Module({
   imports: [
@@ -19,17 +19,14 @@ import { ProjectCollaboratorModule } from './project-collaborator/project-collab
       username: 'postgres',
       password: 'postgres',
       database: 'maquetador',
-      entities: [User],
+      entities: [User, Project, ProjectUser],
       synchronize: true,
     }),
     AuthModule,
     ProjectModule,
-    ProjectColaboratorModule,
-    ProjectInviteModule,
-    RoomModule,
-    ProjectCollaboratorModule,
+    ProjectUserModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, GrapesJsGateway],
 })
 export class AppModule {}
