@@ -9,7 +9,10 @@ import { Server, Socket } from 'socket.io';
 
 interface Room {
   id: string;
-  users: Map<string, { socketId: string; lastActive: number }>;
+  users: Map<
+    string,
+    { socketId: string; name: string; color: string; lastActive: number }
+  >;
   projectState: any;
   lastStateUpdate: number;
 }
@@ -43,10 +46,10 @@ export class CollaborationGateway
   private rooms: Map<string, Room> = new Map();
 
   // Historial de cambios para recuperación y manejo de conflictos
-  private changeHistory: Map<string, ComponentChange[]> = new Map(); // ✅
+  private changeHistory: Map<string, ComponentChange[]> = new Map();
 
   handleConnection(client: Socket) {
-    const { roomId, userId } = client.handshake.query;
+    const { roomId, userId, userName, userColor } = client.handshake.query;
 
     if (!roomId || !userId || Array.isArray(roomId) || Array.isArray(userId)) {
       client.disconnect();
@@ -58,7 +61,15 @@ export class CollaborationGateway
       this.rooms.set(roomId, {
         id: roomId,
         users: new Map([
-          [userId, { socketId: client.id, lastActive: Date.now() }],
+          [
+            userId,
+            {
+              socketId: client.id,
+              name: userName as string,
+              color: userColor as string,
+              lastActive: Date.now(),
+            },
+          ],
         ]),
         projectState: null,
         lastStateUpdate: 0,
@@ -66,9 +77,12 @@ export class CollaborationGateway
 
       // Inicializar historial de cambios para esta sala
       this.changeHistory.set(roomId, []);
+      // console.log('Nueva conexión a la sala', client.handshake.query);
     } else {
       this.rooms.get(roomId)?.users.set(userId, {
         socketId: client.id,
+        name: userName as string,
+        color: userColor as string,
         lastActive: Date.now(),
       });
     }
@@ -79,12 +93,15 @@ export class CollaborationGateway
     // Notificar a otros que un nuevo usuario se unió
     const room = this.rooms.get(roomId);
     const activeUsers = room
-      ? Array.from(room.users.keys()).map((id) => ({
+      ? Array.from(room.users.entries()).map(([id, data]) => ({
           id,
           active: true,
+          name: data.name,
+          color: data.color,
         }))
       : [];
 
+    client.emit('room-users', activeUsers);
     client.to(roomId).emit('user-joined', {
       userId,
       allUsers: activeUsers,
@@ -119,14 +136,17 @@ export class CollaborationGateway
           }
         }, 60000); // Mantener sala vacía por 1 minuto antes de eliminar
       } else {
+        const activeUsers = room
+          ? Array.from(room.users.entries()).map(([id, data]) => ({
+              id,
+              name: data.name,
+              color: data.color,
+            }))
+          : [];
+
+        this.server.to(roomId).emit('room-users', activeUsers);
         // Notificar a otros que el usuario se fue
-        client.to(roomId).emit('user-left', {
-          userId,
-          allUsers: Array.from(room!.users.keys()).map((id) => ({
-            id,
-            active: true,
-          })),
-        });
+        this.server.to(roomId).emit('user-left', { id: userId });
       }
     }
 
@@ -157,7 +177,7 @@ export class CollaborationGateway
       if (room && (!room.lastStateUpdate || timestamp > room.lastStateUpdate)) {
         room.projectState = state as object; // puedes usar un tipo más específico si lo sabes
         room.lastStateUpdate = timestamp;
-        console.log(`Estado del proyecto actualizado para sala ${roomId}`);
+        // console.log(`Estado del proyecto actualizado para sala ${roomId}`);
       }
     }
   }
@@ -225,6 +245,25 @@ export class CollaborationGateway
         componentId,
         history: componentHistory,
       });
+    }
+  }
+
+  @SubscribeMessage('get-room-users')
+  handleGetRoomUsers(client: Socket) {
+    const { roomId } = client.handshake.query;
+
+    if (!roomId || Array.isArray(roomId)) return;
+
+    const room = this.rooms.get(roomId);
+    if (room) {
+      const activeUsers = Array.from(room.users.entries()).map(
+        ([id, data]) => ({
+          id,
+          name: data.name,
+          color: data.color,
+        }),
+      );
+      client.emit('room-users', activeUsers);
     }
   }
 }
