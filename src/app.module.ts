@@ -7,8 +7,9 @@ import { AuthModule } from './auth/auth.module';
 import { ProjectModule } from './project/project.module';
 import { ProjectUserModule } from './project-user/project-user.module';
 import { Project } from './project/entities/project.entity';
-import { GrapesJsGateway } from './lib/gateway/grapesjs.gateway';
+// import { GrapesJsGateway } from './lib/gateway/grapesjs.gateway';
 import { ProjectUser } from './project-user/entities/project-user.entity';
+import { CollaborationModule } from './collaboration/collaboration.module';
 
 @Module({
   imports: [
@@ -25,8 +26,10 @@ import { ProjectUser } from './project-user/entities/project-user.entity';
     AuthModule,
     ProjectModule,
     ProjectUserModule,
+    CollaborationModule,
   ],
   controllers: [AppController],
-  providers: [AppService, GrapesJsGateway],
+  providers: [AppService],
+  // providers: [AppService, GrapesJsGateway],
 })
 export class AppModule {}
