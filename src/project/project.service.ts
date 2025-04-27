@@ -6,6 +6,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ProjectUser } from 'src/project-user/entities/project-user.entity';
 import { User } from 'src/auth/entities/auth.entity';
+import { v4 as uuidv4 } from 'uuid';
 
 @Injectable()
 export class ProjectService {
@@ -27,7 +28,7 @@ export class ProjectService {
     if (!user) throw new Error('No se encontro el proyecto');
     const project = this.projectRepository.create({
       name: dto.name,
-      shareId: dto.shareId,
+      shareId: uuidv4(),
     });
 
     await this.projectRepository.save(project);
