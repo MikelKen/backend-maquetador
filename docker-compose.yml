@@ -27,7 +27,7 @@ services:
       DATABASE_PASSWORD: postgres
       DATABASE_NAME: maquetador_sw
       JWT_SECRET: flajeoitmcafejlgdfdkdhmhdfkdhmxkdhk7w838734ncryechkdhfsj
-
+      PORT: 80
     depends_on:
       - postgres
 
