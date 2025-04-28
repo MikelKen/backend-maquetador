@@ -26,6 +26,6 @@ async function bootstrap() {
       'Origin, X-Requested-With, Content-Type, Accept, Authorization, token',
   });
   // app.useGlobalFilters(new AllExceptionsFilter());
-  await app.listen(process.env.PORT ?? 80);
+  await app.listen(process.env.PORT ?? 3000);
 }
 bootstrap();

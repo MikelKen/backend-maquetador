@@ -19,7 +19,7 @@ services:
     container_name: nestjs_backend_container
     restart: always
     ports:
-      - '443:3000'
+      - '300:3000'
     environment:
       PORT: 3000
       DATABASE_HOST: postgres
