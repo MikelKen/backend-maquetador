@@ -21,13 +21,14 @@ services:
     ports:
       - '80:80'
     environment:
+      PORT: 80
       DATABASE_HOST: postgres
       DATABASE_PORT: 5432
       DATABASE_USER: postgres
       DATABASE_PASSWORD: postgres
       DATABASE_NAME: maquetador_sw
       JWT_SECRET: flajeoitmcafejlgdfdkdhmhdfkdhmxkdhk7w838734ncryechkdhfsj
-      PORT: 80
+
     depends_on:
       - postgres
 
