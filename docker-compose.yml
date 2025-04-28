@@ -19,7 +19,7 @@ services:
     container_name: nestjs_backend_container
     restart: always
     ports:
-      - '3000:3000'
+      - '80:80'
     environment:
       DATABASE_HOST: postgres
       DATABASE_PORT: 5432
