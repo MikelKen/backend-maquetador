@@ -26,7 +26,8 @@ services:
       DATABASE_USER: postgres
       DATABASE_PASSWORD: postgres
       DATABASE_NAME: maquetador_sw
-      NODE_ENV: production
+      JWT_SECRET: flajeoitmcafejlgdfdkdhmhdfkdhmxkdhk7w838734ncryechkdhfsj
+
     depends_on:
       - postgres
 
