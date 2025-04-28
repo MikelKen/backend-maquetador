@@ -3,16 +3,16 @@ dotenv.config();
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
-import * as fs from 'fs';
+// import * as fs from 'fs';
 
 async function bootstrap() {
-  const httpsOptions = {
-    key: fs.readFileSync('./secrets/key.pem'),
-    cert: fs.readFileSync('./secrets/cert.pem'),
-  };
+  // const httpsOptions = {
+  //   key: fs.readFileSync('./secrets/key.pem'),
+  //   cert: fs.readFileSync('./secrets/cert.pem'),
+  // };
 
   const app = await NestFactory.create(AppModule, {
-    httpsOptions,
+    // httpsOptions,
   });
 
   app.useGlobalPipes(new ValidationPipe());
