@@ -21,9 +21,9 @@ export class AuthService {
     private readonly jwtService: JwtService,
   ) {}
 
-  async create(createAuthDto: CreateAuthDto): Promise<User> {
+  async create(createAuthDto: CreateAuthDto) {
     const exist = await this.userRepo.findBy({ email: createAuthDto.email });
-    console.log('==========', exist);
+
     if (exist.length > 0)
       throw new ConflictException('El correo ya esta registrado');
 
@@ -32,9 +32,20 @@ export class AuthService {
       ...createAuthDto,
       password: hashedPassword,
     });
-    return await this.userRepo.save(user);
-  }
+    const userCreated = await this.userRepo.save(user);
+    const payload = { sub: userCreated.id, email: userCreated.email };
+    const token = await this.jwtService.signAsync(payload);
 
+    return {
+      message: 'Registro exitoso',
+      user: {
+        id: userCreated.id,
+        name: userCreated.name,
+        email: userCreated.email,
+      },
+      token: token,
+    };
+  }
   async findAll(): Promise<User[]> {
     return this.userRepo.find();
   }

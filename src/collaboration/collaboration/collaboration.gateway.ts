@@ -34,7 +34,7 @@ interface CursorPosition {
 
 @WebSocketGateway({
   cors: {
-    origin: '*', // En producción, establecer esto a tu URL frontend
+    origin: '*',
   },
 })
 export class CollaborationGateway

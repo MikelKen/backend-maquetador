@@ -27,32 +27,32 @@ export class ProjectController {
     @Request() req: ExpressRequest,
   ) {
     const userId = (req.user as JwtRequestUser).id;
-    console.log('userId', userId);
-    console.log(createProjectDto);
     return await this.projectService.create(createProjectDto, userId);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get()
-  findAll() {
-    return this.projectService.findAll();
+  findAll(@Request() req: ExpressRequest) {
+    const userId = (req.user as JwtRequestUser).id;
+    return this.projectService.findAll(userId);
   }
 
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.projectService.findOne(+id);
   }
-
+  @UseGuards(JwtAuthGuard)
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateProjectDto: UpdateProjectDto) {
-    return this.projectService.update(+id, updateProjectDto);
+    return this.projectService.update(id, updateProjectDto);
   }
-
+  @UseGuards(JwtAuthGuard)
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.projectService.remove(+id);
+    return this.projectService.remove(id);
   }
 
-  @Get('/:shareId')
+  @Get('share/:shareId')
   @UseGuards(JwtAuthGuard)
   async acccessProject(
     @Param('shareId') shareId: string,

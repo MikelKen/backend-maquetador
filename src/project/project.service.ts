@@ -25,10 +25,11 @@ export class ProjectService {
     userId: string,
   ): Promise<{ shareId: string }> {
     const user = await this.userRepository.findOneBy({ id: userId });
-    if (!user) throw new Error('No se encontro el proyecto');
+    if (!user) throw new Error('No se encontro el usuario');
     const project = this.projectRepository.create({
       name: dto.name,
       shareId: uuidv4(),
+      user,
     });
 
     await this.projectRepository.save(project);
@@ -42,21 +43,52 @@ export class ProjectService {
     return { shareId: project.shareId };
   }
 
-  findAll() {
-    return `This action returns all project`;
+  findAll(userId: string): Promise<Project[]> {
+    return this.projectRepository.find({
+      where: { user: { id: userId } },
+      order: { createdAt: 'DESC' },
+    });
   }
 
   findOne(id: number) {
     return `This action returns a #${id} project`;
   }
 
-  update(id: number, updateProjectDto: UpdateProjectDto) {
-    console.log(updateProjectDto);
-    return `This action updates a #${id} project  `;
+  async update(shareId: string, dto: UpdateProjectDto): Promise<Project> {
+    const projectExits = await this.projectRepository.findOne({
+      where: { shareId },
+    });
+
+    console.log(projectExits);
+
+    if (!projectExits) throw new Error('No se encontro el proyecto');
+
+    await this.projectRepository.update(projectExits.id, dto);
+    const project = await this.projectRepository.findOneOrFail({
+      where: { id: projectExits.id },
+    });
+
+    return project;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} project`;
+  async remove(shareId: string): Promise<void> {
+    const project = await this.projectRepository.findOne({
+      where: { shareId },
+    });
+
+    if (!project) {
+      throw new Error('No se encontró el proyecto');
+    }
+
+    const projectUsers = await this.projectUserRepository.find({
+      where: { project: { id: project.id } },
+    });
+
+    if (projectUsers.length > 0) {
+      await this.projectUserRepository.remove(projectUsers);
+    }
+
+    await this.projectRepository.remove(project);
   }
 
   async findByShareId(shareId: string): Promise<Project> {
