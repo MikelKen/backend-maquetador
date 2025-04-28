@@ -17,7 +17,7 @@ COPY . .
 RUN npm run build
 
 # Expone el puerto de la app (NestJS por defecto 3000)
-EXPOSE 80
+EXPOSE 3000
 
 # Comando para ejecutar la app
 CMD ["npm", "run", "start:prod"]
