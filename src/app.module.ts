@@ -7,7 +7,7 @@ import { AuthModule } from './auth/auth.module';
 import { ProjectModule } from './project/project.module';
 import { ProjectUserModule } from './project-user/project-user.module';
 import { Project } from './project/entities/project.entity';
-// import { GrapesJsGateway } from './lib/gateway/grapesjs.gateway';
+
 import { ProjectUser } from './project-user/entities/project-user.entity';
 import { CollaborationModule } from './collaboration/collaboration.module';
 
@@ -15,19 +15,16 @@ import { CollaborationModule } from './collaboration/collaboration.module';
   imports: [
     TypeOrmModule.forRoot({
       type: 'postgres',
-      // host: process.env.DATABASE_HOST,
-      // port: process.env.DATABASE_PORT
-      //   ? parseInt(process.env.DATABASE_PORT)
-      //   : 5432,
-      // username: process.env.DATABASE_USER,
-      // password: process.env.DATABASE_PASSWORD,
-      // database: process.env.DATABASE_NAME,
-      url: process.env.DATABASE_URL,
+      host: process.env.DATABASE_HOST,
+      port: process.env.DATABASE_PORT
+        ? parseInt(process.env.DATABASE_PORT)
+        : 5432,
+      username: process.env.DATABASE_USERNAME,
+      password: process.env.DATABASE_PASSWORD,
+      database: process.env.DATABASE_NAME,
+      // url: process.env.DATABASE_URL,
       entities: [User, Project, ProjectUser],
       synchronize: true,
-      ssl: {
-        rejectUnauthorized: false,
-      },
     }),
     AuthModule,
     ProjectModule,
@@ -36,6 +33,5 @@ import { CollaborationModule } from './collaboration/collaboration.module';
   ],
   controllers: [AppController],
   providers: [AppService],
-  // providers: [AppService, GrapesJsGateway],
 })
 export class AppModule {}
