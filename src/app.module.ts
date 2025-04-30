@@ -16,14 +16,14 @@ import { GeminiModule } from './gemini/gemini.module';
   imports: [
     TypeOrmModule.forRoot({
       type: 'postgres',
-      host: process.env.DATABASE_HOST,
-      port: process.env.DATABASE_PORT
-        ? parseInt(process.env.DATABASE_PORT)
-        : 5432,
-      username: process.env.DATABASE_USERNAME,
-      password: process.env.DATABASE_PASSWORD,
-      database: process.env.DATABASE_NAME,
-      // url: process.env.DATABASE_URL,
+      // host: process.env.DATABASE_HOST,
+      // port: process.env.DATABASE_PORT
+      //   ? parseInt(process.env.DATABASE_PORT)
+      //   : 5432,
+      // username: process.env.DATABASE_USERNAME,
+      // password: process.env.DATABASE_PASSWORD,
+      // database: process.env.DATABASE_NAME,
+      url: process.env.DATABASE_URL,
       entities: [User, Project, ProjectUser],
       synchronize: true,
     }),
