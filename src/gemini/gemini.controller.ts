@@ -18,7 +18,6 @@ export class GeminiController {
   @UseGuards(JwtAuthGuard)
   @UseInterceptors(FileInterceptor('file'))
   async generateHTMLFromImage(@UploadedFile() file: UploadedImageFile) {
-    console.log('llego=====', file);
     if (!file || !file.buffer || !file.mimetype) {
       throw new Error('Invalid or missing file');
     }
