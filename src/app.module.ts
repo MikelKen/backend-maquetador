@@ -10,6 +10,7 @@ import { Project } from './project/entities/project.entity';
 
 import { ProjectUser } from './project-user/entities/project-user.entity';
 import { CollaborationModule } from './collaboration/collaboration.module';
+import { GeminiModule } from './gemini/gemini.module';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { CollaborationModule } from './collaboration/collaboration.module';
     ProjectModule,
     ProjectUserModule,
     CollaborationModule,
+    GeminiModule,
   ],
   controllers: [AppController],
   providers: [AppService],
