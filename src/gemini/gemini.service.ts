@@ -12,32 +12,46 @@ export class GeminiService {
   constructor(private readonly httpService: HttpService) {}
 
   async generateHTMLFromImage(imageBase64: string): Promise<string> {
-    const prompt = `You are a senior frontend developer and I will provide you with a screenshot of a user interface. Your task is to generate a professional, clean HTML layout with inline CSS, optimized for use in GrapesJS.
+    const prompt = `You are a senior frontend developer. I will provide you with a screenshot of a user interface (like an invoice or billing system). Your task is to generate a clean and professional HTML layout with inline CSS that **visually replicates the screenshot EXACTLY** as shown, optimized for use in GrapesJS.
 
-    Important styling and structure guidelines:
+ MUST MATCH THE DESIGN STRUCTURE from the screenshot:
 
-    1. Wrap everything inside a single <div> element (this will be the root).
-    2. Do NOT include <html>, <head>, or <body> tags.
-    3. Use only plain HTML and inline CSS (no external stylesheets or frameworks).
-    4. Style the layout to look visually appealing, modern, and readable:
-       - Use consistent padding and margin.
-       - Use flexbox for layout positioning (e.g., headers, sidebars, forms).
-       - Align labels and inputs neatly in forms.
-       - Use subtle borders, spacing, and background colors for clarity.
-       - Apply basic hover and button styling (with inline CSS).
-    5. Use semantic HTML elements wherever appropriate:
-       - <form>, <input>, <button>, <textarea>, <table>, <label>, <section>, etc.
-    6. All content must be easily editable in GrapesJS:
-       - Avoid hardcoded values inside <td>, <th>, or <div>.
-       - Wrap all visible text inside <div> or <span> tags to make them editable.
-    7. Keep the HTML structure simple, clear, and readable.
-    8. Avoid JavaScript or dynamic behavior of any kind.
-    9. Use modern font styling and layout alignment (e.g., font-size, color, line-height).
-    10. Add sectioning and spacing for better visual grouping.
+- 3 main sections aligned horizontally:
+  - **Client Information and Product list**
+  - **Invoice detail table with red buttons**
+  - **Invoice summary table with yellow button**
 
-    Your output must be:
-    \`\`\`html
-    <!-- Only the HTML inside a <div>, ready to be inserted directly into GrapesJS -->
+ STRICT REQUIREMENTS:
+
+1. Wrap everything inside a single <div> (this is the GrapesJS root).
+2. Do NOT include <html>, <head>, or <body> tags.
+3. Use **only inline CSS styles** (no Tailwind, Bootstrap, or external CSS).
+4. Use **display: flex** to align sections side by side horizontally, exactly like the layout in the image.
+5. Use <label> and <input> pairs for form fields (No°, NIT, Name).
+6. Use <table> for all tabular data with proper borders, column headers, spacing, and row alignment.
+7. Use consistent **padding, margins, and font size** to create a clean, readable UI.
+8. Use subtle background color for headers or sections to separate them visually.
+9. Use button styles to match the colors and size exactly as shown:
+   - Red for "Quitar detalle" and "Limpiar detalles"
+   - Green for "Agregar producto" and "Generar factura"
+   - Yellow for "Mostrar detalle"
+10. Wrap **all visible text** inside <span> or <div> so it’s editable in GrapesJS.
+11. **Use flexbox or table layouts only**, no JavaScript or dynamic behavior.
+12. Use clear visual alignment between labels and inputs.
+13. Use **clean spacing** between sections (min. 10–20px).
+14. The final layout must be visually and structurally identical to the screenshot provided.
+
+ Focus especially on:
+- Table header alignment.
+- Consistent column widths.
+- Uniform button sizes.
+- Form inputs and labels aligned neatly in a column.
+
+Final output:
+\`\`\`html
+<!-- Just the HTML inside a <div>, ready to be inserted into GrapesJS -->
+
+
     `;
     const payload = {
       contents: [
